@@ -1,0 +1,139 @@
+/*
+Copyright (C) BABEC. All rights reserved.
+Copyright (C) THL A29 Limited, a Tencent company. All rights reserved.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+
+syntax = "proto3";
+
+option java_package = "org.chainmaker.pb.consensus.maxbft";
+option go_package = "chainmaker.org/chainmaker/pb-go/v2/consensus/maxbft";
+package maxbft;
+
+import "common/block.proto";
+import "common/request.proto";
+import "common/rwset.proto";
+import "config/chain_config.proto";
+
+message ConsensusMsg {
+    MessageType type = 1;
+    bytes payload = 2;
+}
+
+enum MessageType {
+    PROPOSAL_MESSAGE = 0;
+    VOTE_MESSAGE = 1;
+    PROPOSAL_FETCH_MESSAGE = 2;
+    PROPOSAL_RESP_MESSAGE = 3;
+    NEW_VIEW_MESSAGE = 4;
+}
+
+message ProposalData {
+    // block info of the proposal
+    common.Block      block = 1;
+    // consensus view of the proposal
+    uint64            view = 2;
+    string            proposer = 3;
+    // the qc info of the parent's block in the proposal
+    QuorumCert        justify_qc = 4;
+    uint64            epoch_id = 5;
+    repeated common.TxRWSet tx_rw_set = 6;
+}
+
+message QuorumCert {
+    // votes in qc
+    repeated VoteData votes = 1;
+}
+
+message VoteData {
+    // block id of the vote block
+    bytes           block_id = 1;
+    // block height of the vote block
+    uint64          height = 2;
+    // consensus view of the vote block
+    uint64          view = 3;
+    // voter of the voteInfo
+    bytes           author = 4;
+    // the id of the epoch
+    uint64          epoch_id = 5;
+    // signature of the vote
+    common.EndorsementEntry   signature = 6;
+}
+
+message ViewData {
+    uint64 view = 1;
+}
+
+message ProposalFetchMsg {
+    // block id of the request proposal
+    bytes         block_id = 1;
+    // block height of the request block
+    uint64        height = 2;
+    // consensus view of the request block
+    uint64        view = 3;
+    // identify of the requester
+    bytes         requester = 4;
+}
+
+message ProposalRespMsg {
+    // proposal in response
+    ProposalData proposal = 1;
+    // identify of the responser
+    bytes     responser = 2;
+    // qc of the proposal
+    QuorumCert qc = 3;
+}
+
+enum ConsStateType {
+    // The collection phase of the votes
+    VOTE_COLLECT = 0;
+    // pacemaker of the consensus
+    PACEMAKER = 1;
+}
+
+message BuildProposal {
+    uint64 height = 1;
+    uint64 view = 2;
+    bytes  pre_hash = 3;
+}
+
+message WalEntry{
+    bytes msg = 1;
+    MessageType msg_type = 2;
+    uint64 last_snapshot_index = 3;
+}
+
+message GovernanceContract{
+	// current epoch id
+	uint64 epoch_id = 1;
+
+	// the last view or block height in the epoch
+	uint64 end_view = 2;
+
+	// list of consensus nodeIds
+	repeated string validators = 3;
+
+	// chain config version witch the epoch was based on
+	uint64 config_sequence = 4;
+
+	// chain config
+	config.ChainConfig chain_config = 5;
+
+	// cert frozen list
+	bytes cert_frozen_list = 6;
+
+	// CRL
+	bytes CRL = 7;
+}
+
+message NodeStatus{
+    uint64 height = 1;
+    uint64 view = 2;
+    uint64 epoch = 3;
+    string node_id = 4;
+}
+
+message ProposeBlock{
+    bool is_propose = 1;
+}

@@ -1,0 +1,19 @@
+spring:
+  mail:
+    host: smtp.163.com
+    username: liuyifan2021wangan@163.com
+    password: BPQYWCTBTJZPZKCC
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/book_manage
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  redis:
+    host: 127.0.0.1
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

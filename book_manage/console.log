@@ -1,0 +1,6 @@
+八月 21, 2022 10:17:49 上午 book.manage.Main lambda$addBook$1
+信息: 新添加了一条书籍信息：Book(bid=0, desc=描述4, price=24.4)
+八月 21, 2022 10:30:54 上午 book.manage.Main lambda$addBorrow$2
+信息: 新添加一条借阅信息！
+八月 21, 2022 10:57:50 上午 book.manage.Main lambda$addBorrow$2
+信息: 新添加一条借阅信息！
